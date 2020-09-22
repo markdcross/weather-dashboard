@@ -49,69 +49,14 @@
                         </button>
                     </form>
                     <!-- Search history -->
-                    <!-- <div class="container">
+                    <div class="container">
                         <button
                             type="button"
                             class="btn btn-primary btn-lg btn-block"
                         >
-                            Block level button
+                            Search History
                         </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Block level button
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                        
-                            Block level button
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Block level button
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Block level button
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Block level button
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Block level button
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Block level button
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Block level button
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Block level button
-                        </button>
-                    </div> -->
+                    </div>
                 </div>
             </aside>
 
@@ -121,16 +66,17 @@
                     <div class="col-md-12">
                         <!-- Current weather Jumbotron -->
                         <div class="jumbotron">
-                            <span></span>
+                            <span>
                                 <h1 class="display-3" id="cityName">
                                     <i
                                         class="fa fa-arrow-circle-o-left"
+                                        id="arrowImg"
                                         style="font-size: 64px"
                                     ></i>
                                     Search for a city
                                 </h1>
+                                <img id="currentImg" />
                                 <h1 class="display-3 todayDate"></h1>
-                                <img id="cityName" />
                             </span>
                             <hr />
                             <div class="row">
@@ -144,7 +90,13 @@
                                         <td id="humidData">API data</td>
                                     </tr>
                                     <tr class="table-primary">
-                                        <th scope="row">Wind Speed</th>
+                                        <th scope="row">
+                                            Wind Speed
+                                            <i
+                                                class="fa fa-arrow-down"
+                                                id="windArrow"
+                                            ></i>
+                                        </th>
                                         <td id="windData">API data</td>
                                     </tr>
                                     <tr class="table-primary">
@@ -164,12 +116,9 @@
                             >
                                 <div class="card-header" id="1Date"></div>
                                 <div class="card-body">
-                                    <h4 class="card-title">
-                                        Primary card title
-                                    </h4>
-                                    <img />
-                                    <p class="card-text">Temp:</p>
-                                    <p class="card-text">Temp:</p>
+                                    <img id="1img" />
+                                    <p class="card-text" id="1temp"></p>
+                                    <p class="card-text" id="1humid"></p>
                                 </div>
                             </div>
                             <div
@@ -178,12 +127,9 @@
                             >
                                 <div class="card-header" id="2Date"></div>
                                 <div class="card-body">
-                                    <h4 class="card-title">
-                                        Primary card title
-                                    </h4>
-                                    <img />
-                                    <p class="card-text">Temp:</p>
-                                    <p class="card-text">Temp:</p>
+                                    <img id="2img" />
+                                    <p class="card-text" id="2temp"></p>
+                                    <p class="card-text" id="2humid"></p>
                                 </div>
                             </div>
                             <div
@@ -192,12 +138,9 @@
                             >
                                 <div class="card-header" id="3Date"></div>
                                 <div class="card-body">
-                                    <h4 class="card-title">
-                                        Primary card title
-                                    </h4>
-                                    <img />
-                                    <p class="card-text">Temp:</p>
-                                    <p class="card-text">Temp:</p>
+                                    <img id="3img" />
+                                    <p class="card-text" id="3temp"></p>
+                                    <p class="card-text" id="3humid"></p>
                                 </div>
                             </div>
                             <div
@@ -206,12 +149,9 @@
                             >
                                 <div class="card-header" id="4Date"></div>
                                 <div class="card-body">
-                                    <h4 class="card-title">
-                                        Primary card title
-                                    </h4>
-                                    <img />
-                                    <p class="card-text">Temp:</p>
-                                    <p class="card-text">Temp:</p>
+                                    <img id="4img" />
+                                    <p class="card-text" id="4temp"></p>
+                                    <p class="card-text" id="4humid"></p>
                                 </div>
                             </div>
                             <div
@@ -220,12 +160,9 @@
                             >
                                 <div class="card-header" id="5Date"></div>
                                 <div class="card-body">
-                                    <h4 class="card-title">
-                                        Primary card title
-                                    </h4>
-                                    <img />
-                                    <p class="card-text">Temp:</p>
-                                    <p class="card-text">Temp:</p>
+                                    <img id="5img" />
+                                    <p class="card-text" id="5temp"></p>
+                                    <p class="card-text" id="5humid"></p>
                                 </div>
                             </div>
                         </div>

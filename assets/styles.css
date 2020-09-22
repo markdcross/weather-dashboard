@@ -49,3 +49,9 @@ aside {
     grid-gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
+
+@media only screen and (max-width: 800px) {
+    #arrowImg {
+        display: none;
+    }
+}
