@@ -1,0 +1,51 @@
+/* * {
+    border: 1px solid black;
+} */
+
+body {
+    color: whitesmoke;
+    background-color: #03386a;
+}
+
+header {
+    text-align: center;
+    color: #03386a;
+}
+
+hr {
+    color: whitesmoke;
+}
+
+aside {
+    background-color: #044f97;
+    border-radius: 15px;
+    border: 1px solid #023362;
+}
+.jumbotron {
+    background-color: transparent;
+    padding-top: 1rem;
+}
+
+.table {
+    width: 100%;
+}
+.table th {
+    white-space: nowrap;
+}
+.table td {
+    width: 75%;
+}
+
+.container {
+    margin: 2rem auto;
+}
+.card {
+    display: inline-block;
+    width: 100%;
+    border-radius: 15px;
+}
+.card-container {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
