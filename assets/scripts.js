@@ -37,7 +37,7 @@ $(document).ready(function () {
             });
 
             uvCall(lon, lat);
-            fiveDay(cityID);
+            fiveDay(lon, lat);
         });
     }
 
@@ -55,21 +55,22 @@ $(document).ready(function () {
     }
 
     // Gets the 5-day forecast
-    //TODO: Why is there an API key error here??
-    function fiveDay(cityID) {
-        var fiveQueryURL = `https://api.openweathermap.org/data/2.5/forecast/daily?id=${cityID}&cnt=5&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
-        // http://api.openweathermap.org/data/2.5/forecast/daily?q=Richmond&cnt=5&appid=77cb488591d883bec900753d1136d81c
+
+    //TODO: Update API call to something included before paywall
+    function fiveDay(lon, lat) {
+        var fiveQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
+
         $.ajax({
             url: fiveQueryURL,
             method: 'GET',
         }).then(function (fiveResponse) {
-            for (var k = 0; k < 5; k++) {
+            for (var k = 1; k < 6; k++) {
                 //TODO: Add image from API
-                $(`#${k - 1}temp`).html(
-                    `Temp: ${fiveResponse.list[k].temp.day} &#8457;`
+                $(`#${k}temp`).html(
+                    `Temp: ${fiveResponse.daily[k].temp.day} &#8457;`
                 );
-                $(`#${k - 1}humid`).html(
-                    `Humidity: ${fiveResponse.list[k].humidity}%`
+                $(`#${k}humid`).html(
+                    `Humidity: ${fiveResponse.daily[k].humidity}%`
                 );
             }
         });
