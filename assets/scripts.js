@@ -1,11 +1,10 @@
 $(document).ready(function () {
     var searchHistory = [];
-    //----------------------------------------------------------
-    // Searching for a city, calling the API, and mapping values
-    //----------------------------------------------------------
-    //TODO: Update comments
     init();
-    // --------------------
+
+    //----------------------------------------------------------
+    // Event listeners
+    //----------------------------------------------------------
     // Submit event on search form
     $('form').on('submit', function (event) {
         event.preventDefault();
@@ -17,7 +16,6 @@ $(document).ready(function () {
         }
         // Adds the searched city to the search history array
         searchHistory.push(city);
-
         // Runs function to store the search history array in local storage
         storeCities();
 
@@ -27,33 +25,36 @@ $(document).ready(function () {
         // Runs the function to call the API and display retrieved data
         call(city);
 
+        // Clears and resets the form
         $('form')[0].reset();
     });
 
+    // Click event for search history buttons
     $('.searchHistoryEl').on('click', '.historyBtn', function (event) {
         event.preventDefault();
-        // Collects the value from the search field
+        // Collects the value from the button text
         var btnCityName = $(this).text();
+        // Runs the function to call the API and display retrieved data
         call(btnCityName);
     });
-    // Pulls localStorage into searchHistory array
 
+    //-------------
+    // Pulls localStorage into searchHistory array
+    //-------------
     function init() {
-        // Get stored todos from localStorage
+        // Get stored cities from localStorage
         // Parsing the JSON string to an object
         var storedCities = JSON.parse(localStorage.getItem('searchHistory'));
-
-        // If todos were retrieved from localStorage, update the todos array to it
+        // If cities were retrieved from localStorage, update the search history array
         if (storedCities !== null) {
             searchHistory = storedCities;
         }
-
-        // Render todos to the DOM
+        // Render buttons to the DOM
         renderButtons();
     }
 
     //---------------
-    // Add content of search to local storage on submit, and display search history buttons
+    // Add content of search to local storage on submit
     //---------------
     function storeCities() {
         localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
@@ -77,19 +78,23 @@ $(document).ready(function () {
         }
     }
 
-    // If a button is clicked, pass that city name in as a parameter. Otherwise use the contents of the search bar
+    // --------------------------------
+    // ajax call to openweathermap API
+    //---------------------------------
+    // Called with input from search bar or search history button
     function call(btnCityName) {
         var cityName = btnCityName || $('input').val();
         // Current weather conditions
         var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
-
+        // ajax call
         $.ajax({
             url: queryURL,
             method: 'GET',
         }).then(function (response) {
+            // Collect lon and lat for subsequent API calls
             var lon = response.coord.lon;
             var lat = response.coord.lat;
-            // Lists the city in the Jumbotron
+            // Lists the data in the Jumbotron
             $('#cityName').text(response.name);
             $('#currentImg').attr(
                 'src',
@@ -101,13 +106,15 @@ $(document).ready(function () {
             $('#windArrow').css({
                 transform: `rotate(${response.wind.deg}deg)`,
             });
-
+            // Calls the API for uv index data
             uvCall(lon, lat);
+            // Calls the API for five-day forecast info
             fiveDay(lon, lat);
         });
     }
-
-    // Gets UV index from lat/long in current weather call
+    //---------------
+    // API call for UV Index. Gets the lat/lon from current weather call
+    //---------------
     function uvCall(lon, lat) {
         var uvQueryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
 
@@ -115,7 +122,9 @@ $(document).ready(function () {
             url: uvQueryURL,
             method: 'GET',
         }).then(function (uvResponse) {
+            // Display UV Index data
             $('#uvData').html(`${uvResponse.value}`);
+            // Color code the UV Index row
             if (uvResponse.value <= 2) {
                 $('.uvRow').css('background-color', 'green');
             } else if (uvResponse.value > 2 && uvResponse.value <= 5) {
@@ -129,8 +138,9 @@ $(document).ready(function () {
             }
         });
     }
-
-    // Gets the 5-day forecast
+    //---------------
+    // API call for five-day forecast. Gets the lat/lon from current weather call
+    //---------------
     function fiveDay(lon, lat) {
         var fiveQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
 
@@ -138,14 +148,18 @@ $(document).ready(function () {
             url: fiveQueryURL,
             method: 'GET',
         }).then(function (fiveResponse) {
+            // Loops through the forecast starting tomorrow
             for (var k = 1; k < 6; k++) {
+                // Displays the image in the appropriate card
                 $(`#${k}img`).attr(
                     'src',
                     `http://openweathermap.org/img/wn/${fiveResponse.daily[k].weather[0].icon}@2x.png`
                 );
+                // Displays the temp in the appropriate card
                 $(`#${k}temp`).html(
                     `Temp: ${fiveResponse.daily[k].temp.day} &#8457;`
                 );
+                // Displays the humidity in the appropriate card
                 $(`#${k}humid`).html(
                     `Humidity: ${fiveResponse.daily[k].humidity}%`
                 );
