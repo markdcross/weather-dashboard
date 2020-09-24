@@ -38,6 +38,16 @@ $(document).ready(function () {
         call(btnCityName);
     });
 
+    $('#clearBtn').on('click', function (event) {
+        event.preventDefault();
+        // Clears the search history element
+        $('.searchHistoryEl').empty();
+        searchHistory = [];
+        renderButtons();
+        // Clears and resets the form
+        $('form')[0].reset();
+    });
+
     //-------------
     // Pulls localStorage into searchHistory array
     //-------------
@@ -56,6 +66,7 @@ $(document).ready(function () {
     //---------------
     // Add content of search to local storage on submit
     //---------------
+    //TODO test this
     function storeCities() {
         localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
