@@ -49,14 +49,7 @@
                         </button>
                     </form>
                     <!-- Search history -->
-                    <div class="container">
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-lg btn-block"
-                        >
-                            Search History
-                        </button>
-                    </div>
+                    <div class="container searchHistoryEl"></div>
                 </div>
             </aside>
 
@@ -66,28 +59,26 @@
                     <div class="col-md-12">
                         <!-- Current weather Jumbotron -->
                         <div class="jumbotron">
-                            <span>
-                                <h1 class="display-3" id="cityName">
-                                    <i
-                                        class="fa fa-arrow-circle-o-left"
-                                        id="arrowImg"
-                                        style="font-size: 64px"
-                                    ></i>
-                                    Search for a city
-                                </h1>
-                                <img id="currentImg" />
-                                <h1 class="display-3 todayDate"></h1>
-                            </span>
+                            <h1 class="display-3" id="cityName">
+                                <i
+                                    class="fa fa-arrow-circle-o-left"
+                                    id="arrowImg"
+                                    style="font-size: 64px"
+                                ></i>
+                                Search for a city
+                            </h1>
+
+                            <h3 class="todayDate"><img id="currentImg" /></h3>
                             <hr />
                             <div class="row">
                                 <table class="table table-hover col-xl-4">
                                     <tr class="table-primary">
                                         <th scope="row">Temperature</th>
-                                        <td id="tempData">API data</td>
+                                        <td id="tempData"></td>
                                     </tr>
                                     <tr class="table-primary">
                                         <th scope="row">Humidity</th>
-                                        <td id="humidData">API data</td>
+                                        <td id="humidData"></td>
                                     </tr>
                                     <tr class="table-primary">
                                         <th scope="row">
@@ -97,11 +88,13 @@
                                                 id="windArrow"
                                             ></i>
                                         </th>
-                                        <td id="windData">API data</td>
+                                        <td id="windData"></td>
                                     </tr>
                                     <tr class="table-primary">
-                                        <th scope="row">UV Index</th>
-                                        <td id="uvData">API data</td>
+                                        <th class="uvRow" scope="row">
+                                            UV Index
+                                        </th>
+                                        <td class="uvRow" id="uvData"></td>
                                     </tr>
                                 </table>
                             </div>
