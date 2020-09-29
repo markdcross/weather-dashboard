@@ -55,8 +55,6 @@ $(document).ready(function () {
         if (storedCities !== null) {
             searchHistory = storedCities;
         }
-
-        console.log();
         // Render buttons to the DOM
         renderButtons();
     }
@@ -64,7 +62,6 @@ $(document).ready(function () {
     //---------------
     // Add content of search to local storage on submit
     //---------------
-    //TODO test this
     function storeCities() {
         localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
@@ -131,7 +128,6 @@ $(document).ready(function () {
             })
             // If an error is returned
             .catch(function (error) {
-                console.log(error);
                 // Throws an alert if invalid city
                 alert('Enter a valid city');
             });
