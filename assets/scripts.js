@@ -1,6 +1,7 @@
 $(document).ready(function () {
     var searchHistory = [];
     init();
+    call(searchHistory[0]);
 
     //----------------------------------------------------------
     // Event listeners
@@ -14,16 +15,9 @@ $(document).ready(function () {
         if (city === '') {
             return;
         }
-        // Adds the searched city to the search history array
-        searchHistory.push(city);
-        // Runs function to store the search history array in local storage
-        storeCities();
-
-        // Runs function to create and display buttons of prior searched cities
-        renderButtons();
 
         // Runs the function to call the API and display retrieved data
-        call(city);
+        call();
 
         // Clears and resets the form
         $('form')[0].reset();
@@ -40,6 +34,8 @@ $(document).ready(function () {
 
     $('#clearBtn').on('click', function (event) {
         event.preventDefault();
+        // Clears local storage
+        window.localStorage.clear();
         // Clears the search history element
         $('.searchHistoryEl').empty();
         searchHistory = [];
@@ -59,6 +55,8 @@ $(document).ready(function () {
         if (storedCities !== null) {
             searchHistory = storedCities;
         }
+
+        console.log();
         // Render buttons to the DOM
         renderButtons();
     }
@@ -101,27 +99,42 @@ $(document).ready(function () {
         $.ajax({
             url: queryURL,
             method: 'GET',
-        }).then(function (response) {
-            // Collect lon and lat for subsequent API calls
-            var lon = response.coord.lon;
-            var lat = response.coord.lat;
-            // Lists the data in the Jumbotron
-            $('#cityName').text(response.name);
-            $('#currentImg').attr(
-                'src',
-                `http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`
-            );
-            $('#tempData').html(`${response.main.temp} &#8457;`);
-            $('#humidData').html(`${response.main.humidity}%`);
-            $('#windData').html(`${response.wind.speed} mph`);
-            $('#windArrow').css({
-                transform: `rotate(${response.wind.deg}deg)`,
+        })
+            .then(function (response) {
+                if (!btnCityName) {
+                    // Adds the searched city to the search history array
+                    searchHistory.unshift(cityName);
+                    // Runs function to store the search history array in local storage
+                    storeCities();
+                    // Runs function to create and display buttons of prior searched cities
+                    renderButtons();
+                }
+                // Collect lon and lat for subsequent API calls
+                var lon = response.coord.lon;
+                var lat = response.coord.lat;
+                // Lists the data in the Jumbotron
+                $('#cityName').text(response.name);
+                $('#currentImg').attr(
+                    'src',
+                    `http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`
+                );
+                $('#tempData').html(`${response.main.temp} &#8457;`);
+                $('#humidData').html(`${response.main.humidity}%`);
+                $('#windData').html(`${response.wind.speed} mph`);
+                $('#windArrow').css({
+                    transform: `rotate(${response.wind.deg}deg)`,
+                });
+                // Calls the API for uv index data
+                uvCall(lon, lat);
+                // Calls the API for five-day forecast info
+                fiveDay(lon, lat);
+            })
+            // If an error is returned
+            .catch(function (error) {
+                console.log(error);
+                // Throws an alert if invalid city
+                alert('Enter a valid city');
             });
-            // Calls the API for uv index data
-            uvCall(lon, lat);
-            // Calls the API for five-day forecast info
-            fiveDay(lon, lat);
-        });
     }
     //---------------
     // API call for UV Index. Gets the lat/lon from current weather call
