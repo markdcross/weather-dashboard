@@ -4,7 +4,7 @@ $(document).ready(function () {
     // Dates pulled in from Moment.js
     //-------------------------------
     // Today's date
-    var momentDay = moment().format('dddd, MMMM Do');
+    const momentDay = moment().format('dddd, MMMM Do');
     $('.todayDate').prepend(momentDay);
 
     // Generate dates for the 5-day forecast
@@ -18,7 +18,7 @@ $(document).ready(function () {
     $('form').on('submit', function (event) {
         event.preventDefault();
         // Collects the value from the search field
-        var city = $('input').val();
+        let city = $('input').val();
         // Returns if input is empty
         if (city === '') {
             return;
@@ -35,7 +35,7 @@ $(document).ready(function () {
     $('.searchHistoryEl').on('click', '.historyBtn', function (event) {
         event.preventDefault();
         // Collects the value from the button text
-        var btnCityName = $(this).text();
+        let btnCityName = $(this).text();
         // Runs the function to call the API and display retrieved data
         call(btnCityName);
     });
@@ -61,8 +61,8 @@ $(document).ready(function () {
         // For each item in the search history array
         for (var j = 0; j < searchHistory.length; j++) {
             // Store the search term (city) and create a button with the search term displayed
-            var cityName1 = searchHistory[j];
-            var historyBtn = $(
+            let cityName1 = searchHistory[j];
+            let historyBtn = $(
                 '<button type="button" class="btn btn-primary btn-lg btn-block historyBtn">'
             ).text(cityName1);
             // Prepend the buttons to the search history div
@@ -75,7 +75,7 @@ $(document).ready(function () {
     const init = () => {
         // Get stored cities from localStorage
         // Parsing the JSON string to an object
-        var storedCities = JSON.parse(localStorage.getItem('searchHistory'));
+        let storedCities = JSON.parse(localStorage.getItem('searchHistory'));
         // If cities were retrieved from localStorage, update the search history array
         if (storedCities !== null) {
             searchHistory = storedCities;
@@ -95,7 +95,7 @@ $(document).ready(function () {
     // API call for UV Index. Gets the lat/lon from current weather call
     //---------------
     const uvCall = (lon, lat) => {
-        var uvQueryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
+        let uvQueryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
 
         $.ajax({
             url: uvQueryURL,
@@ -122,7 +122,7 @@ $(document).ready(function () {
     // API call for five-day forecast. Gets the lat/lon from current weather call
     //---------------
     const fiveDay = (lon, lat) => {
-        var fiveQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
+        let fiveQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
 
         $.ajax({
             url: fiveQueryURL,
@@ -152,9 +152,9 @@ $(document).ready(function () {
     //---------------------------------
     // Called with input from search bar or search history button
     const call = (btnCityName) => {
-        var cityName = btnCityName || $('input').val();
+        let cityName = btnCityName || $('input').val();
         // Current weather conditions
-        var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
+        let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
         // ajax call
         $.ajax({
             url: queryURL,
