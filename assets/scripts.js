@@ -1,8 +1,16 @@
 $(document).ready(function () {
     var searchHistory = [];
-    init();
-    call(searchHistory[0]);
+    //-------------------------------
+    // Dates pulled in from Moment.js
+    //-------------------------------
+    // Today's date
+    var momentDay = moment().format('dddd, MMMM Do');
+    $('.todayDate').prepend(momentDay);
 
+    // Generate dates for the 5-day forecast
+    for (var i = 1; i < 6; i++) {
+        $(`#${i}Date`).text(moment().add(i, 'd').format('dddd, MMMM Do'));
+    }
     //----------------------------------------------------------
     // Event listeners
     //----------------------------------------------------------
@@ -44,32 +52,10 @@ $(document).ready(function () {
         $('form')[0].reset();
     });
 
-    //-------------
-    // Pulls localStorage into searchHistory array
-    //-------------
-    function init() {
-        // Get stored cities from localStorage
-        // Parsing the JSON string to an object
-        var storedCities = JSON.parse(localStorage.getItem('searchHistory'));
-        // If cities were retrieved from localStorage, update the search history array
-        if (storedCities !== null) {
-            searchHistory = storedCities;
-        }
-        // Render buttons to the DOM
-        renderButtons();
-    }
-
-    //---------------
-    // Add content of search to local storage on submit
-    //---------------
-    function storeCities() {
-        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-    }
-
     //---------------
     // Creates and displays buttons for each city that is searched. Persists on refresh.
     //---------------
-    function renderButtons() {
+    const renderButtons = () => {
         // Clears the search history div
         $('.searchHistoryEl').html('');
         // For each item in the search history array
@@ -82,13 +68,90 @@ $(document).ready(function () {
             // Prepend the buttons to the search history div
             $('.searchHistoryEl').prepend(historyBtn);
         }
-    }
+    };
+    //-------------
+    // Pulls localStorage into searchHistory array
+    //-------------
+    const init = () => {
+        // Get stored cities from localStorage
+        // Parsing the JSON string to an object
+        var storedCities = JSON.parse(localStorage.getItem('searchHistory'));
+        // If cities were retrieved from localStorage, update the search history array
+        if (storedCities !== null) {
+            searchHistory = storedCities;
+        }
+        // Render buttons to the DOM
+        renderButtons();
+    };
+
+    init();
+    //---------------
+    // Add content of search to local storage on submit
+    //---------------
+    const storeCities = () =>
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+
+    //---------------
+    // API call for UV Index. Gets the lat/lon from current weather call
+    //---------------
+    const uvCall = (lon, lat) => {
+        var uvQueryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
+
+        $.ajax({
+            url: uvQueryURL,
+            method: 'GET',
+        }).then(function (uvResponse) {
+            // Display UV Index data
+            $('#uvData').html(`${uvResponse.value}`);
+            // Color code the UV Index row
+            if (uvResponse.value <= 2) {
+                $('.uvRow').css('background-color', 'green');
+            } else if (uvResponse.value > 2 && uvResponse.value <= 5) {
+                $('.uvRow').css('background-color', 'yellow');
+            } else if (uvResponse.value > 5 && uvResponse.value <= 7) {
+                $('.uvRow').css('background-color', 'orange');
+            } else if (uvResponse.value > 7 && uvResponse.value <= 10) {
+                $('.uvRow').css('background-color', 'red');
+            } else {
+                $('.uvRow').css('background-color', 'violet');
+            }
+        });
+    };
+
+    //---------------
+    // API call for five-day forecast. Gets the lat/lon from current weather call
+    //---------------
+    const fiveDay = (lon, lat) => {
+        var fiveQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
+
+        $.ajax({
+            url: fiveQueryURL,
+            method: 'GET',
+        }).then(function (fiveResponse) {
+            // Loops through the forecast starting tomorrow
+            for (var k = 1; k < 6; k++) {
+                // Displays the image in the appropriate card
+                $(`#${k}img`).attr(
+                    'src',
+                    `http://openweathermap.org/img/wn/${fiveResponse.daily[k].weather[0].icon}@2x.png`
+                );
+                // Displays the temp in the appropriate card
+                $(`#${k}temp`).html(
+                    `Temp: ${fiveResponse.daily[k].temp.day} &#8457;`
+                );
+                // Displays the humidity in the appropriate card
+                $(`#${k}humid`).html(
+                    `Humidity: ${fiveResponse.daily[k].humidity}%`
+                );
+            }
+        });
+    };
 
     // --------------------------------
     // ajax call to openweathermap API
     //---------------------------------
     // Called with input from search bar or search history button
-    function call(btnCityName) {
+    const call = (btnCityName) => {
         var cityName = btnCityName || $('input').val();
         // Current weather conditions
         var queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
@@ -131,71 +194,7 @@ $(document).ready(function () {
                 // Throws an alert if invalid city
                 alert('Enter a valid city');
             });
-    }
-    //---------------
-    // API call for UV Index. Gets the lat/lon from current weather call
-    //---------------
-    function uvCall(lon, lat) {
-        var uvQueryURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
+    };
 
-        $.ajax({
-            url: uvQueryURL,
-            method: 'GET',
-        }).then(function (uvResponse) {
-            // Display UV Index data
-            $('#uvData').html(`${uvResponse.value}`);
-            // Color code the UV Index row
-            if (uvResponse.value <= 2) {
-                $('.uvRow').css('background-color', 'green');
-            } else if (uvResponse.value > 2 && uvResponse.value <= 5) {
-                $('.uvRow').css('background-color', 'yellow');
-            } else if (uvResponse.value > 5 && uvResponse.value <= 7) {
-                $('.uvRow').css('background-color', 'orange');
-            } else if (uvResponse.value > 7 && uvResponse.value <= 10) {
-                $('.uvRow').css('background-color', 'red');
-            } else {
-                $('.uvRow').css('background-color', 'violet');
-            }
-        });
-    }
-    //---------------
-    // API call for five-day forecast. Gets the lat/lon from current weather call
-    //---------------
-    function fiveDay(lon, lat) {
-        var fiveQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly,alerts&units=imperial&appid=77cb488591d883bec900753d1136d81c`;
-
-        $.ajax({
-            url: fiveQueryURL,
-            method: 'GET',
-        }).then(function (fiveResponse) {
-            // Loops through the forecast starting tomorrow
-            for (var k = 1; k < 6; k++) {
-                // Displays the image in the appropriate card
-                $(`#${k}img`).attr(
-                    'src',
-                    `http://openweathermap.org/img/wn/${fiveResponse.daily[k].weather[0].icon}@2x.png`
-                );
-                // Displays the temp in the appropriate card
-                $(`#${k}temp`).html(
-                    `Temp: ${fiveResponse.daily[k].temp.day} &#8457;`
-                );
-                // Displays the humidity in the appropriate card
-                $(`#${k}humid`).html(
-                    `Humidity: ${fiveResponse.daily[k].humidity}%`
-                );
-            }
-        });
-    }
-
-    //-------------------------------
-    // Dates pulled in from Moment.js
-    //-------------------------------
-    // Today's date
-    var momentDay = moment().format('dddd, MMMM Do');
-    $('.todayDate').prepend(momentDay);
-
-    // Generate dates for the 5-day forecast
-    for (var i = 1; i < 6; i++) {
-        $(`#${i}Date`).text(moment().add(i, 'd').format('dddd, MMMM Do'));
-    }
+    call(searchHistory[0]);
 });
